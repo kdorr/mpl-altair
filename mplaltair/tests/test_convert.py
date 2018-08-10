@@ -239,7 +239,8 @@ df_line = pd.DataFrame({
         'a': [1, 2, 3, 1, 2, 3, 1, 2, 3],
         'b': [3, 2, 1, 7, 8, 9, 4, 5, 6],
         'c': ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c'],
-        'd': [1, 1, 1, 2, 2, 2, 3, 3, 3]
+        'd': [1, 1, 1, 2, 2, 2, 3, 3, 3],
+        'dates': ['1968-08-01', '1968-08-01', '1968-08-01', '2010-08-08', '2010-08-08', '2010-08-08', '2015-03-14', '2015-03-14', '2015-03-14']
     })
 
 
@@ -252,7 +253,6 @@ class TestLines(object):
         )
         fig, _ = convert(chart)
         return fig
-
 
     @pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_convert')
     @pytest.mark.parametrize('x,y,s', [
@@ -269,7 +269,6 @@ class TestLines(object):
         fig, _ = convert(chart)
         return fig
 
-
     @pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_convert')
     def test_line_color(self):
         chart = alt.Chart(df_line).mark_line().encode(
@@ -280,15 +279,28 @@ class TestLines(object):
         fig, _ = convert(chart)
         return fig
 
-
-    @pytest.mark.xfail(raises=NotImplementedError)
-    def test_line_opacity_fail(self):
+    @pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_convert')
+    @pytest.mark.parametrize('o', ['d:Q', 'c:O', 'dates:T'])
+    def test_line_opacity(self, o):
         chart = alt.Chart(df_line).mark_line().encode(
             alt.X('a'),
             alt.Y('b'),
-            alt.Opacity('d')
+            alt.Opacity(o)
         )
-        fig, _ = convert(chart)
+        fig, ax = convert(chart)
+        return fig
+
+    @pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_convert')
+    @pytest.mark.parametrize('c,o', [('d:Q', 'd:Q'), ('c:N', 'c:O'), ('dates:T', 'dates:T')])
+    def test_line_opacity_color(self, c, o):
+        chart = alt.Chart(df_line).mark_line().encode(
+            alt.X('a'),
+            alt.Y('b'),
+            alt.Color(c),
+            alt.Opacity(o)
+        )
+        fig, ax = convert(chart)
+        return fig
 
 
 class TestBars(object):
