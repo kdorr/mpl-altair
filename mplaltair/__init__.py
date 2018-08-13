@@ -29,17 +29,18 @@ def convert(alt_chart):
     chart = parse_chart.ChartMetadata(alt_chart)
     fig, ax = plt.subplots()
     if chart.mark in ['point', 'circle', 'square']:  # scatter
-        _normalize_data(alt_chart)
-        mapping = _convert(alt_chart)
+        # _normalize_data(alt_chart)
+        # mapping = _convert(alt_chart)
+        mapping = _convert(chart)
         ax.scatter(**mapping)
         # convert_axis(ax, chart)
     elif chart.mark == 'line':  # line
-        _normalize_data(alt_chart)
+        # _normalize_data(alt_chart)
         _handle_line(chart, ax)
     else:
         raise NotImplementedError
-    convert_axis(ax, alt_chart)
-    fig.tight_layout()
+    # convert_axis(ax, alt_chart)
+    # fig.tight_layout()
     return fig, ax
 
 
