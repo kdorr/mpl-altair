@@ -64,6 +64,7 @@ def test_axis_zero_quantitative(x, y, zero):
     )
     fig, ax = convert(chart)
     return fig
+    # plt.show()
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_axis')
